@@ -8,9 +8,20 @@
 </head>
 <body>
 
+<!-- Flash message block for success/error messages -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <ul class="flashes">
+      {% for category, message in messages %}
+        <li class="{{ category }}">{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
 <h1>Library</h1>
 
-<!-- Add Author and Add Book Buttons -->
+<!-- Buttons to add new authors and books -->
 <div>
     <a href="{{ url_for('add_author') }}">
         <button type="button">Add a New Author</button>
@@ -21,9 +32,9 @@
     </a>
 </div>
 
-<!-- Search Form -->
+<!-- Search form for books -->
 <form action="/" method="GET">
-    <input type="text" name="search" placeholder="Search for books..." value="{{ request.args.get('search', '') }}">
+    <input type="text" name="search" placeholder="Search for books...">
     <button type="submit">Search</button>
 
     <label for="sort_by">Sort by:</label>
@@ -33,18 +44,15 @@
     </select>
 </form>
 
-{% if books %}
-    {% for book in books %}
-        <div>
-            <h3>{{ book.title }} by {{ book.author.name }}</h3>
-            <form action="{{ url_for('delete_book', book_id=book.id) }}" method="post" style="display:inline;">
-                <button type="submit">Delete Book</button>
-            </form>
-        </div>
-    {% endfor %}
-{% else %}
-    <p>No books found that match your search criteria.</p>
-{% endif %}
+<!-- List of books -->
+{% for book in books %}
+    <div>
+        <h3>{{ book.title }} by {{ book.author.name }}</h3>
+        <form action="{{ url_for('delete_book', book_id=book.id) }}" method="post" style="display:inline;">
+            <button type="submit">Delete Book</button>
+        </form>
+    </div>
+{% endfor %}
 
 </body>
 </html>
