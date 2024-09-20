@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Library</title>
+</head>
+<body>
+
+<h1>Library</h1>
+
+<!-- Add Author and Add Book Buttons -->
+<div>
+    <a href="{{ url_for('add_author') }}">
+        <button type="button">Add a New Author</button>
+    </a>
+
+    <a href="{{ url_for('add_book') }}">
+        <button type="button">Add a New Book</button>
+    </a>
+</div>
+
+<!-- Search Form -->
+<form action="/" method="GET">
+    <input type="text" name="search" placeholder="Search for books..." value="{{ request.args.get('search', '') }}">
+    <button type="submit">Search</button>
+
+    <label for="sort_by">Sort by:</label>
+    <select name="sort_by" onchange="this.form.submit()">
+        <option value="title" {% if request.args.get('sort_by') == 'title' %}selected{% endif %}>Title</option>
+        <option value="author" {% if request.args.get('sort_by') == 'author' %}selected{% endif %}>Author</option>
+    </select>
+</form>
+
+{% if books %}
+    {% for book in books %}
+        <div>
+            <h3>{{ book.title }} by {{ book.author.name }}</h3>
+            <form action="{{ url_for('delete_book', book_id=book.id) }}" method="post" style="display:inline;">
+                <button type="submit">Delete Book</button>
+            </form>
+        </div>
+    {% endfor %}
+{% else %}
+    <p>No books found that match your search criteria.</p>
+{% endif %}
+
+</body>
+</html>
