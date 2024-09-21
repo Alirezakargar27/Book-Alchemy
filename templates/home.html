@@ -3,8 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Library</title>
+    <style>
+        .book-container {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .book-item {
+            margin: 15px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            width: 180px;
+            text-align: center;
+        }
+        .book-cover {
+            width: 128px;
+            height: 192px;
+        }
+    </style>
 </head>
 <body>
 
@@ -34,7 +50,7 @@
 
 <!-- Search form for books -->
 <form action="/" method="GET">
-    <input type="text" name="search" placeholder="Search for books...">
+    <input type="text" name="search" placeholder="Search for books..." value="{{ request.args.get('search', '') }}">
     <button type="submit">Search</button>
 
     <label for="sort_by">Sort by:</label>
@@ -44,15 +60,26 @@
     </select>
 </form>
 
-<!-- List of books -->
-{% for book in books %}
-    <div>
-        <h3>{{ book.title }} by {{ book.author.name }}</h3>
-        <form action="{{ url_for('delete_book', book_id=book.id) }}" method="post" style="display:inline;">
-            <button type="submit">Delete Book</button>
-        </form>
-    </div>
-{% endfor %}
+<!-- List of books with author and cover image -->
+<div class="book-container">
+    {% for book in books %}
+        <div class="book-item">
+            <h3>{{ book.title }}</h3>
+            <p>by {{ book.author.name }}</p>
+
+            <!-- Display book cover -->
+            <img src="{{ book.cover_url }}"
+                 alt="Book Cover"
+                 class="book-cover"
+                 onerror="this.onerror=null;this.src='/static/default_cover.jpg';">
+
+            <!-- Delete button for the book -->
+            <form action="{{ url_for('delete_book', book_id=book.id) }}" method="post" style="margin-top: 10px;">
+                <button type="submit">Delete Book</button>
+            </form>
+        </div>
+    {% endfor %}
+</div>
 
 </body>
 </html>
