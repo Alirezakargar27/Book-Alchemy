@@ -5,17 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Add Book</title>
+    <script>
+        // Function to display flash message as an alert
+        function showFlashMessage(message) {
+            if (message) {
+                alert(message);
+            }
+        }
+    </script>
 </head>
 <body>
 
-<!-- Display flash messages after an action -->
+<!-- Check for flash messages and pass them to JavaScript alert -->
 {% with messages = get_flashed_messages(with_categories=true) %}
   {% if messages %}
-    <ul class="flashes">
-      {% for category, message in messages %}
-        <li class="{{ category }}">{{ message }}</li>
-      {% endfor %}
-    </ul>
+    <script>
+        var flashMessage = "{{ messages[0][1] }}";  // Get the message text
+        showFlashMessage(flashMessage);  // Call the function to show it as an alert
+    </script>
   {% endif %}
 {% endwith %}
 
@@ -39,6 +46,11 @@
 
     <input type="submit" value="Add Book">
 </form>
+
+<!-- Back to Homepage button -->
+<a href="{{ url_for('home') }}">
+    <button type="button">Back to Homepage</button>
+</a>
 
 </body>
 </html>
